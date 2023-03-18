@@ -199,7 +199,7 @@ function deduction(frequency){
 function paye(frequency, salary, taxable, deduction){
     let taxed;
     let rate;
-    if(taxable <= 0){
+    if(taxable <= 0 || taxable < deduction){
         taxed = 0
         return taxed;
     }
@@ -256,8 +256,7 @@ incomeBtn.addEventListener('mousedown', function(){
         let payeGov = paye(frequency, salary, taxables, deductions);
         let netSalary = netIncome(salary, payeGov);
         incomeTxt.textContent = (`Taxable income: ${taxables}    
-        \nNHIF: ${health}   
-        \nDeductions: ${deductions}    
+        \nNHIF: ${health}    
         \nPaye: ${payeGov}   
         \nNet Salary: ${netSalary}`);
     }
