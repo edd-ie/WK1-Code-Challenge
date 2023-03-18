@@ -1,4 +1,14 @@
-//document.get.value
+let gradeBtn = document.getElementById('grade')
+let gradeTxt = document.getElementById("txt1");
+
+let speedBtn = document.getElementById('merit')
+let speedTxt = document.getElementById("txt2");
+
+
+
+let incomeBtn = document.getElementById('income');
+let incomeTxt = document.getElementById("txt3");
+
 
 
 //TODO: Challenge 1: Student Grade Generator (Toy Problem)
@@ -6,30 +16,41 @@
 //todo: The input should be between 0 and 100. 
 //todo: Then output the correct grade: 
 //todo: A > 79, B - 60 to 79, C -  59 to 49, D - 40 to 49, E - less 40
-let grade;
-let marks = prompt("Input marks: ")
-if (marks >=0 && marks <= 100){
-    switch (true){
-        case marks > 79:
-            grade = 'A';
-            break;
-        case marks <= 79 && marks >= 60:
-            grade = 'B';
-            break;
-        case marks < 60 && marks >= 49:
-            grade = 'C';
-            break;
-        case marks < 49 && marks >= 40:
-            grade = 'D';
-            break;
-        default:
-            grade = 'E';
-    }
-    console.log(grade);
+function gradeGenerator(input){
+    let grade;
+    let marks = input;
+    console.log(marks);
+    if (marks >=0 && marks <= 100){
+        switch (true){
+            case marks > 79:
+                grade = 'A';
+                break;
+            case marks <= 79 && marks >= 60:
+                grade = 'B';
+                break;
+            case marks < 60 && marks >= 49:
+                grade = 'C';
+                break;
+            case marks < 49 && marks >= 40:
+                grade = 'D';
+                break;
+            default:
+                grade = 'E';
+        }
+        console.log(grade);
 
-}else{console.error("Invalid marks!")}
+    }else{return ("Invalid marks!")}
 
+    return grade;
+}
 
+gradeBtn.addEventListener('mousedown', function (){
+    let marksValue = parseInt(document.getElementById("marks").value);
+    if (marksValue < 0)
+        alert("Check marks!");    
+    gradeTxt.textContent = `Grade: ${gradeGenerator(marksValue)}`;
+    console.log(marksValue, typeof marksValue);    
+})
 
 
 //TODO: Challenge 2: Speed Detector (Toy Problem)
@@ -38,18 +59,31 @@ if (marks >=0 && marks <= 100){
 //todo: Otherwise, for every 5 km/s above limit (70), 
 //todo: it should give the driver one demerit point 
 //todo: print the total number of demerit points.
-let speed = prompt("Input speed in m/s: ");
-let above;
-
-if (speed < 70){
-    console.log("Ok");
-}else{
-    above = Math.floor((speed - 70)/5)
-    if (above < 13){
-        console.log(`Points: ${above}`);
+function merit(input){
+    let speed = input;
+    let above;
+    if (speed < 70){
+        return("Ok");
+    }else{
+        above = Math.floor((speed - 70)/5)
+        if (above < 13){
+            return(`Points: ${above}`);
+        }
+        else{return ("License suspended")}
     }
-    else{console.log("License suspended")}
 }
+
+speedBtn.addEventListener('mousedown', function(){
+    let speedValue = parseInt(document.getElementById('speed').value);
+    if (speedValue < 0){
+        speedTxt.textContent = "Invalid speed!"
+        alert("Check speed value!");
+    }
+    else{
+        speedTxt.textContent = `Demerits: ${merit(speedValue)}`;
+    }    
+    
+})
 
 
 //TODO: Challenge 3: Net Salary Calculator (Toy Problem)
@@ -57,39 +91,45 @@ if (speed < 70){
 //todo: Calculate the payee (i.e. Tax), NHIFDeductions, NSSFDeductions, gross salary, and net salary. 
 
 //todo: salary - exempts = Taxable - deductions = to be taxed * taxable bracket%
-let frequency = prompt("Is salary monthly/annualy: m or a")
-let salary = parseInt(prompt("Input salary: "));
-let benefits = parseInt(prompt("Input benefits: "));
-let disability = prompt("Any disabilty: y/n?")
+
 let relief,health,netSalary;
 
-function taxable(){
+function taxable(disability, benefits, salary, frequency){
     let compenstation, exempt, taxableSalary;
 
-    if (disability == "y"){
-        if (frequency == "m"){
+    if (disability == "Yes"){
+        if (frequency == "Monthly"){
             compenstation = 150000;
-            if (compenstation < salary){                
+            if (salary > compenstation){                
                 exempt = compenstation + benefits;
-            }else{return (0)}
+                console.log(exempt)
+                taxableSalary = salary - exempt;
+                return taxableSalary;
+            }
+            else{
+                taxableSalary = 0
+                return taxableSalary}
         }
-        else if (frequency == "a"){
+        else if (frequency == "Annually"){
             compenstation = 1800000;
-            if (compenstation < salary){
+            if (salary > compenstation){
                 exempt = compenstation + benefits;
-            }else{return (0)}
+                taxableSalary = salary - exempt;
+                return taxableSalary;
+            }else{
+                taxableSalary = 0
+                return taxableSalary}
         }
     }
-    else if(disability == "n"){
-        exempt = benefits;
+    else if(disability == "No"){exempt = benefits;
+        taxableSalary = salary - exempt;
+        return taxableSalary;
     }
-   
-    taxableSalary = salary - exempt;
-    return taxableSalary;
+    
 }
 
 
-function nhif(){
+function nhif(salary){
     switch(true){
         case (salary < 6000):
             health = 150;
@@ -142,13 +182,13 @@ function nhif(){
     return health;
 }
 
-function deduction(grossSalary){
-    if (frequency == "m"){
+function deduction(frequency){
+    if (frequency == "Monthly"){
         relief = 2400;
         return (relief+nhif())
 
     }
-    else if (frequency == "a"){
+    else if (frequency == "Annually"){
         relief = 28,800;
         return (relief+nhif())
     }
@@ -156,15 +196,16 @@ function deduction(grossSalary){
 }
 
 
-function paye(){
-    let taxed = taxable() - deduction()
+function paye(frequency, salary, taxable, deduction){
+    let taxed;
     let rate;
-    if(taxable()===0){
-        return 0;
+    if(taxable <= 0){
+        taxed = 0
+        return taxed;
     }
     else{
-        taxed = taxable() - deduction()
-        if(frequency == "a"){
+        taxed = taxable - deduction
+        if(frequency == "Annually"){
             if (salary < 288001){
                 rate = 0.1;
             }else if(salary === 288001 || salary < 388001){
@@ -172,7 +213,7 @@ function paye(){
             }else{
                 rate = 0.3;
             }
-        }else if(frequency == "m"){
+        }else if(frequency == "Monthly"){
             if (salary < 24001){
                 rate = 0.1;
             }else if(salary === 24001 || salary <32334){
@@ -186,15 +227,41 @@ function paye(){
     }
 }
 
-function netIncome(){
-    netSalary = salary - (paye());
+function netIncome(salary, paye){
+    netSalary = salary - paye;
     return netSalary;
 }
 
-console.log(
-    taxable(),
-    nhif(),
-    deduction(),
-    paye(),
-    netIncome()
-);
+incomeBtn.addEventListener('mousedown', function(){
+    let salaryValue = document.getElementById('salary').value;
+    if (salaryValue < 0){
+        incomeTxt.textContent = "Invalid input!"
+        alert("Check salary!")
+    }
+    else{
+        let benefitsValue = document.getElementById('benefits').value;
+        let freqValue = document.getElementById('frequency').value;
+        let disValsValue = document.getElementById('disability').value;
+
+        let salary = parseInt(salaryValue);
+        let benefit = parseInt(benefitsValue);
+        let disabilities = disValsValue
+        let frequency = freqValue
+
+        let taxables = taxable(disabilities, benefit, salary, frequency);    
+        let health = nhif(salary);
+        console.log(taxables)
+
+        let deductions = deduction(frequency);
+        let payeGov = paye(frequency, salary, taxables, deductions);
+        let netSalary = netIncome(salary, payeGov);
+        incomeTxt.textContent = (`Taxable income: ${taxables}    
+        \nNHIF: ${health}   
+        \nDeductions: ${deductions}    
+        \nPaye: ${payeGov}   
+        \nNet Salary: ${netSalary}`);
+    }
+    
+})
+
+
