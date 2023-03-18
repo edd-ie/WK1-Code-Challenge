@@ -46,7 +46,7 @@ function gradeGenerator(input){
 
 gradeBtn.addEventListener('mousedown', function (){
     let marksValue = parseInt(document.getElementById("marks").value);
-    if (marksValue < 0)
+    if (marksValue < 0 || marksValue === NaN)
         alert("Check marks!");    
     gradeTxt.textContent = `Grade: ${gradeGenerator(marksValue)}`;
     console.log(marksValue, typeof marksValue);    
@@ -75,7 +75,7 @@ function merit(input){
 
 speedBtn.addEventListener('mousedown', function(){
     let speedValue = parseInt(document.getElementById('speed').value);
-    if (speedValue < 0){
+    if (speedValue < 0 || speedValue == NaN){
         speedTxt.textContent = "Invalid speed!"
         alert("Check speed value!");
     }
@@ -234,7 +234,7 @@ function netIncome(salary, paye){
 
 incomeBtn.addEventListener('mousedown', function(){
     let salaryValue = document.getElementById('salary').value;
-    if (salaryValue < 0){
+    if (salaryValue < 0 || salaryValue == NaN){
         incomeTxt.textContent = "Invalid input!"
         alert("Check salary!")
     }
