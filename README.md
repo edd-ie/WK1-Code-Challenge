@@ -8,7 +8,7 @@ A multifunction project used to solve different asked prompts
 
 
 ## Grade Calculator
-This JS script prompts the user to enter their marks and calculates their grade based on a switch statement.
+This JS script prompts the user to enter their marks and calculates their grade based on a switch statement in ```gradeGenerator(input)```.
 
 ### Usage
 The initial value of the variable grade is undefined.
@@ -25,7 +25,7 @@ The final calculated grade is displayed.
 
 
 ## Speed Radar Detection System
-This JavaScript code assists the police radar detection unit to determine if drivers are overspeeding, and the corresponding punishment (if applicable). It accepts user input for speed, and automatically validates it before computing the penalty.
+This JavaScript code assists the police radar detection unit to determine if drivers are overspeeding, and the corresponding punishment (if applicable). It accepts user input for speed, and automatically validates it before computing the penalty all compress in ```merit(input)```.
 
 ### Usage
 To use the program, please follow these instructions:
